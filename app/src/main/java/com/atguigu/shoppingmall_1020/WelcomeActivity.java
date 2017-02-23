@@ -39,6 +39,7 @@ public class WelcomeActivity extends AppCompatActivity {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if(event.getAction()==MotionEvent.ACTION_DOWN){
+            //立刻进入主页面
             startMainActivity();
             return true;
         }
