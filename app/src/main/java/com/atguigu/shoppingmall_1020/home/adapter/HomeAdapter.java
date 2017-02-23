@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -19,6 +21,9 @@ import com.youth.banner.transformer.BackgroundToForegroundTransformer;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 /**
  * 作者：尚硅谷-杨光福 on 2017/2/23 10:24
@@ -69,6 +74,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
     public int currentType = BANNER;
 
 
+
     /**
      * 根据位置得到对应的类型
      *
@@ -99,7 +105,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
     @Override
     public int getItemCount() {
         //所有的类型写完后改成6
-        return 1;
+        return 2;
     }
 
 
@@ -120,6 +126,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
         if (viewType == BANNER) {
             return new BannerViewHolder(mContext, inflater.inflate(R.layout.banner_viewpager, null));
         } else if (viewType == CHANNEL) {
+            return new ChannelViewHolder(mContext, inflater.inflate(R.layout.channel_item, null));
         } else if (viewType == ACT) {
         } else if (viewType == SECKILL) {
         } else if (viewType == RECOMMEND) {
@@ -130,6 +137,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
 
     /**
      * 绑定数据
+     *
      * @param holder
      * @param position
      */
@@ -140,10 +148,41 @@ public class HomeAdapter extends RecyclerView.Adapter {
             //绑定数据
             viewHolder.setData(result.getBanner_info());
         } else if (getItemViewType(position) == CHANNEL) {
+            ChannelViewHolder viewHolder = (ChannelViewHolder) holder;
+            //绑定数据
+            viewHolder.setData(result.getChannel_info());
         } else if (getItemViewType(position) == ACT) {
         } else if (getItemViewType(position) == SECKILL) {
         } else if (getItemViewType(position) == RECOMMEND) {
         } else if (getItemViewType(position) == HOT) {
+        }
+    }
+
+
+    class ChannelViewHolder extends RecyclerView.ViewHolder {
+        private final Context mContext;
+        @InjectView(R.id.gv_channel)
+        GridView gvChannel;
+        ChannelAdapter channelAdapter;
+        public ChannelViewHolder(Context mContext, View itemView) {
+            super(itemView);
+            ButterKnife.inject(this,itemView);
+            this.mContext = mContext;
+        }
+
+        public void setData(List<HomeBean.ResultEntity.ChannelInfoEntity> channel_info) {
+            //设置GridView的适配器
+            channelAdapter = new ChannelAdapter(mContext,channel_info);
+            gvChannel.setAdapter(channelAdapter);
+
+            //设置item的点击事件
+            gvChannel.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Toast.makeText(mContext, "position=="+position, Toast.LENGTH_SHORT).show();
+                }
+            });
+
         }
     }
 
@@ -163,9 +202,9 @@ public class HomeAdapter extends RecyclerView.Adapter {
         public void setData(List<HomeBean.ResultEntity.BannerInfoEntity> banner_info) {
             //1.得到数据
             //2.设置Banner的数据
-            List<String> images=new ArrayList<>();
-            for (int i=0;i < banner_info.size();i++){
-                images .add(Constants.BASE_URL_IMAGE+banner_info.get(i).getImage());
+            List<String> images = new ArrayList<>();
+            for (int i = 0; i < banner_info.size(); i++) {
+                images.add(Constants.BASE_URL_IMAGE + banner_info.get(i).getImage());
             }
 
             //简单使用
@@ -188,8 +227,8 @@ public class HomeAdapter extends RecyclerView.Adapter {
             banner.setOnBannerClickListener(new OnBannerClickListener() {
                 @Override
                 public void OnBannerClick(int position) {
-                    int realPosition = position -1;
-                    Toast.makeText(mContext, "realPosition=="+realPosition, Toast.LENGTH_SHORT).show();
+                    int realPosition = position - 1;
+                    Toast.makeText(mContext, "realPosition==" + realPosition, Toast.LENGTH_SHORT).show();
                 }
             });
         }
