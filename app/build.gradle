@@ -28,4 +28,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.jakewharton:butterknife:5.1.1'
     compile 'com.android.support:recyclerview-v7:24.2.1'
+    compile project(':okhttputils')
+    compile 'com.alibaba:fastjson:1.1.55.android'
 }

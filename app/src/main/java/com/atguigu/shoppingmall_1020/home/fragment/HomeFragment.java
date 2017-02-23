@@ -7,12 +7,18 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.atguigu.shoppingmall_1020.R;
 import com.atguigu.shoppingmall_1020.base.BaseFragment;
+import com.atguigu.shoppingmall_1020.home.bean.HomeBean;
+import com.atguigu.shoppingmall_1020.utils.Constants;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import okhttp3.Call;
 
 /**
  * 作者：尚硅谷-杨光福 on 2017/2/22 11:36
@@ -45,9 +51,43 @@ public class HomeFragment extends BaseFragment {
     public void initData() {
         super.initData();
         Log.e("TAG", "主页的数据被初始化了...");
+        getDataFromNet();
     }
 
 
+    public void getDataFromNet() {
+        OkHttpUtils
+                .get()
+                //联网地址
+                .url(Constants.HOME_URL)
+                .id(100)//http,
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        Log.e("TAG","联网失败=="+e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        Log.e("TAG","联网成功==");
+                        processData(response);
+
+                    }
+                });
+    }
+
+    /**
+     * 1.三种解析方式：fastjson解析数据和Gson和手动解析
+     * 2.设置适配器
+     * @param response
+     */
+    private void processData(String response) {
+        //使用fastjson解析json数据
+        HomeBean homeBean = JSON.parseObject(response,HomeBean.class);
+        Log.e("TAG","解析数据成功=="+homeBean.getResult().getHot_info().get(0).getName());
+
+    }
 
     @Override
     public void onDestroyView() {
