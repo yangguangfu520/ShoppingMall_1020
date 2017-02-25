@@ -36,4 +36,6 @@ dependencies {
     compile 'com.youth.banner:banner:1.4.9'  //最新版本
 //    compile project(':okhttputils')
     compile 'com.zhy:okhttputils:2.6.2'
+
+    compile 'com.zhy:magic-viewpager:1.0.1'
 }

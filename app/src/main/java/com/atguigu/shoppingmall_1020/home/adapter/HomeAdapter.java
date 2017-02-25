@@ -1,6 +1,7 @@
 package com.atguigu.shoppingmall_1020.home.adapter;
 
 import android.content.Context;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.youth.banner.Banner;
 import com.youth.banner.listener.OnBannerClickListener;
 import com.youth.banner.loader.ImageLoader;
 import com.youth.banner.transformer.BackgroundToForegroundTransformer;
+import com.zhy.magicviewpager.transformer.RotateYTransformer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,7 +107,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
     @Override
     public int getItemCount() {
         //所有的类型写完后改成6
-        return 2;
+        return 3;
     }
 
 
@@ -128,6 +130,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
         } else if (viewType == CHANNEL) {
             return new ChannelViewHolder(mContext, inflater.inflate(R.layout.channel_item, null));
         } else if (viewType == ACT) {
+            return new ActViewHolder(mContext, inflater.inflate(R.layout.act_item, null));
         } else if (viewType == SECKILL) {
         } else if (viewType == RECOMMEND) {
         } else if (viewType == HOT) {
@@ -152,9 +155,39 @@ public class HomeAdapter extends RecyclerView.Adapter {
             //绑定数据
             viewHolder.setData(result.getChannel_info());
         } else if (getItemViewType(position) == ACT) {
+
+            ActViewHolder viewHolder = (ActViewHolder) holder;
+            viewHolder.setData(result.getAct_info());
         } else if (getItemViewType(position) == SECKILL) {
         } else if (getItemViewType(position) == RECOMMEND) {
         } else if (getItemViewType(position) == HOT) {
+        }
+    }
+
+    class ActViewHolder extends RecyclerView.ViewHolder {
+        @InjectView(R.id.act_viewpager)
+        ViewPager actViewpager;
+        ViewPagerAdapter adapter;
+        public ActViewHolder(Context mContext, View itemView) {
+            super(itemView);
+            ButterKnife.inject(this,itemView);
+        }
+
+        public void setData(List<HomeBean.ResultEntity.ActInfoEntity> act_info) {
+            //1.设置ViewPager的适配器
+            adapter = new ViewPagerAdapter(mContext,act_info);
+
+
+            //美化ViewPager库
+            actViewpager.setPageMargin(20);//设置page间间距，自行根据需求设置
+            actViewpager.setOffscreenPageLimit(3);//>=3
+            actViewpager.setAdapter(adapter);
+//setPageTransformer 决定动画效果
+            actViewpager.setPageTransformer(true, new
+                    RotateYTransformer());
+
+            //2.设置点击事件
+
         }
     }
 
@@ -164,22 +197,23 @@ public class HomeAdapter extends RecyclerView.Adapter {
         @InjectView(R.id.gv_channel)
         GridView gvChannel;
         ChannelAdapter channelAdapter;
+
         public ChannelViewHolder(Context mContext, View itemView) {
             super(itemView);
-            ButterKnife.inject(this,itemView);
+            ButterKnife.inject(this, itemView);
             this.mContext = mContext;
         }
 
         public void setData(List<HomeBean.ResultEntity.ChannelInfoEntity> channel_info) {
             //设置GridView的适配器
-            channelAdapter = new ChannelAdapter(mContext,channel_info);
+            channelAdapter = new ChannelAdapter(mContext, channel_info);
             gvChannel.setAdapter(channelAdapter);
 
             //设置item的点击事件
             gvChannel.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Toast.makeText(mContext, "position=="+position, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "position==" + position, Toast.LENGTH_SHORT).show();
                 }
             });
 
