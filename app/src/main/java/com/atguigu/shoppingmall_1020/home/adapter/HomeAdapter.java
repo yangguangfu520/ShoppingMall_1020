@@ -110,7 +110,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
     @Override
     public int getItemCount() {
         //所有的类型写完后改成6
-        return 4;
+        return 5;
     }
 
 
@@ -137,6 +137,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
         } else if (viewType == SECKILL) {
             return new SeckillViewHolder(mContext, inflater.inflate(R.layout.seckill_item, null));
         } else if (viewType == RECOMMEND) {
+            return new RecommendViewHolder(mContext, inflater.inflate(R.layout.recommend_item, null));
         } else if (viewType == HOT) {
         }
         return null;
@@ -166,7 +167,37 @@ public class HomeAdapter extends RecyclerView.Adapter {
             SeckillViewHolder viewHolder = (SeckillViewHolder) holder;
             viewHolder.setData(result.getSeckill_info());
         } else if (getItemViewType(position) == RECOMMEND) {
+            RecommendViewHolder viewHolder = (RecommendViewHolder) holder;
+            viewHolder.setData(result.getRecommend_info());
         } else if (getItemViewType(position) == HOT) {
+        }
+    }
+
+    class RecommendViewHolder extends RecyclerView.ViewHolder {
+        @InjectView(R.id.tv_more_recommend)
+        TextView tvMoreRecommend;
+        @InjectView(R.id.gv_recommend)
+        GridView gvRecommend;
+        RecommendGridViewAdapter adapter;
+        public RecommendViewHolder(Context mContext, View itemView) {
+            super(itemView);
+            ButterKnife.inject(RecommendViewHolder.this,itemView);
+        }
+
+        public void setData(final List<HomeBean.ResultEntity.RecommendInfoEntity> recommend_info) {
+
+            //1.设置适配器
+            adapter = new RecommendGridViewAdapter(mContext,recommend_info);
+            gvRecommend.setAdapter(adapter);
+            //2.设置点击事件
+
+            gvRecommend.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Toast.makeText(mContext, "postion=="+recommend_info.get(position).getName(), Toast.LENGTH_SHORT).show();
+                }
+            });
+
         }
     }
 
@@ -178,32 +209,33 @@ public class HomeAdapter extends RecyclerView.Adapter {
         @InjectView(R.id.rv_seckill)
         RecyclerView rvSeckill;
         SeckillRecyclerViewAdapter adapter;
+
         public SeckillViewHolder(Context mContext, View itemView) {
             super(itemView);
-            ButterKnife.inject(this,itemView);
+            ButterKnife.inject(this, itemView);
 
 
         }
 
         public void setData(HomeBean.ResultEntity.SeckillInfoEntity seckill_info) {
             //1.设置RecyclerView的适配
-            adapter = new SeckillRecyclerViewAdapter(mContext,seckill_info);
+            adapter = new SeckillRecyclerViewAdapter(mContext, seckill_info);
             rvSeckill.setAdapter(adapter);
 
             //2.设置布局管理器
-            rvSeckill.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false));
+            rvSeckill.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
 
             //3.设置点击事件
             adapter.setOnItemClickListener(new SeckillRecyclerViewAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View v, int position) {
-                    Toast.makeText(mContext, "postion=="+position, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "postion==" + position, Toast.LENGTH_SHORT).show();
                 }
             });
 
             //设置秒杀的时间
             countdownview.setTag("test1");
-            long duration = Long.parseLong(seckill_info.getEnd_time())-Long.parseLong(seckill_info.getStart_time());
+            long duration = Long.parseLong(seckill_info.getEnd_time()) - Long.parseLong(seckill_info.getStart_time());
             countdownview.start(duration);
 
         }
