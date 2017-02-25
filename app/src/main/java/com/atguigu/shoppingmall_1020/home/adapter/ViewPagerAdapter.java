@@ -33,12 +33,24 @@ public class ViewPagerAdapter extends PagerAdapter {
     }
 
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
+    public Object instantiateItem(ViewGroup container, final int position) {
         ImageView imageView = new ImageView(mContext);
         imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         Glide.with(mContext).load(Constants.BASE_URL_IMAGE+datas.get(position).getIcon_url()).into(imageView);
         //添加到ViewPager容器中
         container.addView(imageView);
+
+        //设置点击事件
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Toast.makeText(mContext, "position=="+position, Toast.LENGTH_SHORT).show();
+                if(listener != null){
+                    listener.onItemClick(v,position);
+                }
+            }
+        });
+
         return imageView;
     }
 
@@ -50,5 +62,21 @@ public class ViewPagerAdapter extends PagerAdapter {
     @Override
     public boolean isViewFromObject(View view, Object object) {
         return view==object;
+    }
+
+    /**
+     * 点击item的接口
+     */
+    public interface OnItemClickListener{
+        public void onItemClick(View v,int position);
+    }
+    private OnItemClickListener listener;
+
+    /**
+     * 设置item的点击事件
+     * @param listener
+     */
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
     }
 }

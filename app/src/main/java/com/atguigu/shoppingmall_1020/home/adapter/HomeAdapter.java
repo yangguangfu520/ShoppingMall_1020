@@ -187,6 +187,12 @@ public class HomeAdapter extends RecyclerView.Adapter {
                     RotateYTransformer());
 
             //2.设置点击事件
+            adapter.setOnItemClickListener(new ViewPagerAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(View v, int position) {
+                    Toast.makeText(mContext, "position=="+position, Toast.LENGTH_SHORT).show();
+                }
+            });
 
         }
     }
