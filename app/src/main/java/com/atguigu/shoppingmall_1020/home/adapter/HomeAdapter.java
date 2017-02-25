@@ -201,6 +201,11 @@ public class HomeAdapter extends RecyclerView.Adapter {
                 }
             });
 
+            //设置秒杀的时间
+            countdownview.setTag("test1");
+            long duration = Long.parseLong(seckill_info.getEnd_time())-Long.parseLong(seckill_info.getStart_time());
+            countdownview.start(duration);
+
         }
     }
 

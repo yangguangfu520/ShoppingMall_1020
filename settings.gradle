@@ -1,1 +1,1 @@
-include ':app', ':CountdownView-master', ':library'
+include ':app'
