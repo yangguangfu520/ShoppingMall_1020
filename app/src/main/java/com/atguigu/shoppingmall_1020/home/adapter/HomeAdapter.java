@@ -16,8 +16,10 @@ import android.widget.Toast;
 
 import com.atguigu.shoppingmall_1020.R;
 import com.atguigu.shoppingmall_1020.app.GoodsInfoActivity;
+import com.atguigu.shoppingmall_1020.app.WebViewActivity;
 import com.atguigu.shoppingmall_1020.home.bean.GoodsBean;
 import com.atguigu.shoppingmall_1020.home.bean.HomeBean;
+import com.atguigu.shoppingmall_1020.home.bean.WebViewBean;
 import com.atguigu.shoppingmall_1020.utils.Constants;
 import com.bumptech.glide.Glide;
 import com.youth.banner.Banner;
@@ -41,6 +43,7 @@ import cn.iwgang.countdownview.CountdownView;
  */
 public class HomeAdapter extends RecyclerView.Adapter {
     public static final String GOODS_BEAN = "goodsBean";
+    public static final String WEBVIEW_BEAN = "webview_bean";
     private final Context mContext;
     private final HomeBean.ResultEntity result;
 
@@ -81,7 +84,6 @@ public class HomeAdapter extends RecyclerView.Adapter {
      * 当前类型
      */
     public int currentType = BANNER;
-
 
 
     /**
@@ -186,22 +188,23 @@ public class HomeAdapter extends RecyclerView.Adapter {
         @InjectView(R.id.gv_hot)
         GridView gvHot;
         HotGridViewAdapter adapter;
+
         public HotViewHolder(Context mContext, View itemView) {
             super(itemView);
-            ButterKnife.inject(this,itemView);
+            ButterKnife.inject(this, itemView);
 
         }
 
         public void setData(List<HomeBean.ResultEntity.HotInfoEntity> hot_info) {
             //1.设置适配器
-            adapter = new HotGridViewAdapter(mContext,hot_info);
+            adapter = new HotGridViewAdapter(mContext, hot_info);
             gvHot.setAdapter(adapter);
 
             //2.设置item的点击事件
             gvHot.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Toast.makeText(mContext, "position=="+position, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "position==" + position, Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -239,7 +242,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
                     goodsBean.setProduct_id(infoEntity.getProduct_id());
 
                     Intent intent = new Intent(mContext, GoodsInfoActivity.class);
-                    intent.putExtra(GOODS_BEAN,goodsBean);
+                    intent.putExtra(GOODS_BEAN, goodsBean);
                     mContext.startActivity(intent);
                 }
             });
@@ -297,7 +300,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
             ButterKnife.inject(this, itemView);
         }
 
-        public void setData(List<HomeBean.ResultEntity.ActInfoEntity> act_info) {
+        public void setData(final List<HomeBean.ResultEntity.ActInfoEntity> act_info) {
             //1.设置ViewPager的适配器
             adapter = new ViewPagerAdapter(mContext, act_info);
 
@@ -314,7 +317,19 @@ public class HomeAdapter extends RecyclerView.Adapter {
             adapter.setOnItemClickListener(new ViewPagerAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View v, int position) {
-                    Toast.makeText(mContext, "position==" + position, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(mContext, "position==" + position, Toast.LENGTH_SHORT).show();
+                    HomeBean.ResultEntity.ActInfoEntity actInfoEntity = act_info.get(position);
+
+                    WebViewBean webViewBean = new WebViewBean();
+                    webViewBean.setName(actInfoEntity.getName());
+                    webViewBean.setIcon_url(actInfoEntity.getIcon_url());
+                    webViewBean.setUrl(actInfoEntity.getUrl());
+
+                    Intent intent = new Intent(mContext,WebViewActivity.class);
+                    intent.putExtra(WEBVIEW_BEAN,webViewBean);
+                    mContext.startActivity(intent);
+
+
                 }
             });
 
@@ -363,7 +378,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
 
         }
 
-        public void setData(List<HomeBean.ResultEntity.BannerInfoEntity> banner_info) {
+        public void setData(final List<HomeBean.ResultEntity.BannerInfoEntity> banner_info) {
             //1.得到数据
             //2.设置Banner的数据
             List<String> images = new ArrayList<>();
@@ -389,13 +404,50 @@ public class HomeAdapter extends RecyclerView.Adapter {
             banner.setBannerAnimation(BackgroundToForegroundTransformer.class);
             //3.设置Banner的点击事件
             banner.setOnBannerListener(new OnBannerListener() {
-                @Override
-                public void OnBannerClick(int position) {
+                                           @Override
+                                           public void OnBannerClick(int position) {
+
+
+                                               int realPostion = position;
+                                               if (realPostion < banner_info.size()) {
+                                                   String product_id = "";
+                                                   String name = "";
+                                                   String cover_price = "";
+                                                   String image = "";
+                                                   if (realPostion == 0) {
+                                                       product_id = "627";
+                                                       cover_price = "32.00";
+                                                       name = "剑三T恤批发";
+                                                   } else if (realPostion == 1) {
+                                                       product_id = "21";
+                                                       cover_price = "8.00";
+                                                       name = "同人原创】剑网3 剑侠情缘叁 Q版成男 口袋胸针";
+                                                   } else {
+                                                       product_id = "1341";
+                                                       cover_price = "50.00";
+                                                       name = "【蓝诺】《天下吾双》 剑网3同人本";
+                                                   }
+
+                                                   image = banner_info.get(position).getImage();
+
+                                                   GoodsBean goodsBean = new GoodsBean();
+                                                   goodsBean.setProduct_id(product_id);
+                                                   goodsBean.setName(name);
+                                                   goodsBean.setCover_price(cover_price);
+                                                   goodsBean.setFigure(image);
+
+
 //                    Toast.makeText(mContext, "position==" + position, Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(mContext, GoodsInfoActivity.class);
-                    mContext.startActivity(intent);
-                }
-            });
+                                                   Intent intent = new Intent(mContext, GoodsInfoActivity.class);
+
+                                                   intent.putExtra(GOODS_BEAN, goodsBean);
+                                                   mContext.startActivity(intent);
+                                               }
+
+                                           }
+                                       }
+
+            );
         }
     }
 
