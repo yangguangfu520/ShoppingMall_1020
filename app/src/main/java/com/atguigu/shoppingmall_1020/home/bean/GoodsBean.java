@@ -21,6 +21,18 @@ public class GoodsBean implements Serializable {
     private String figure;
     private String name;
     private String product_id;
+    /**
+     * 某个商品在购物车购买的数量
+     */
+    private int number = 1;
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
 
     public String getCover_price() {
         return cover_price;

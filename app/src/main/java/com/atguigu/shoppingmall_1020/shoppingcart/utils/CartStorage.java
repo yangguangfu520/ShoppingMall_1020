@@ -39,9 +39,10 @@ public class CartStorage {
     private void listToSparseArray() {
 
         List<GoodsBean> beanList = getAllData();
+        //循环起来，把数据转存到sparseArray
         for (int i = 0; i < beanList.size(); i++) {
             GoodsBean goodsBean = beanList.get(i);
-            sparseArray.put(Integer.parseInt(goodsBean.getProduct_id()),goodsBean);
+            sparseArray.put(Integer.parseInt(goodsBean.getProduct_id()), goodsBean);
         }
 
     }
@@ -64,11 +65,13 @@ public class CartStorage {
     private List<GoodsBean> getLocalData() {
         List<GoodsBean> goodsBeens = new ArrayList<>();
 
-        //从本地获取数据
+        //从本地获取数据  -从sp
         String json = CacheUtils.getString(mContext, JSON_CART);//保持的json数据
+
         if (!TextUtils.isEmpty(json)) {
             //把它转化成列表
             goodsBeens = new Gson().fromJson(json, new TypeToken<List<GoodsBean>>() {
+
             }.getType());
         }
         //把json数据解析成List数据
@@ -93,5 +96,81 @@ public class CartStorage {
         }
         return instace;
 
+    }
+
+    /**
+     * 添加数据
+     * @param goodsBean
+     */
+    public void addData(GoodsBean goodsBean) {
+        //1.数据添加到sparseArray
+        GoodsBean tempGoodsBean = sparseArray.get(Integer.parseInt(goodsBean.getProduct_id()));
+        //已经保存过
+        if (tempGoodsBean != null) {
+            tempGoodsBean.setNumber(tempGoodsBean.getNumber() + goodsBean.getNumber());
+        } else {
+            //没有添加过
+            tempGoodsBean = goodsBean;
+        }
+
+        //添加到集合中
+        sparseArray.put(Integer.parseInt(tempGoodsBean.getProduct_id()), tempGoodsBean);
+
+
+        //2.保持到本地
+        saveLocal();
+    }
+
+    /**
+     * 删除数据
+     * @param goodsBean
+     */
+    public  void deleteData(GoodsBean goodsBean){
+        //1.删除数据
+        sparseArray.delete(Integer.parseInt(goodsBean.getProduct_id()));
+
+        //2.保持到本地
+        saveLocal();
+    }
+
+    /**
+     * 修改数据
+     * @param goodsBean
+     */
+    public  void updateData(GoodsBean goodsBean){
+        //1.删除数据
+        sparseArray.put(Integer.parseInt(goodsBean.getProduct_id()),goodsBean);
+
+        //2.保持到本地
+        saveLocal();
+    }
+
+    /**
+     * 保持到本地
+     */
+    private void saveLocal() {
+        //1.把sparseArray转成List
+        List<GoodsBean> goodsBeanList = sparseArrayToList();
+        //2.使用Gson把List转json的String类型数据
+        String  savaJson = new Gson().toJson(goodsBeanList);
+        //3.使用CacheUtils缓存数据
+        CacheUtils.setString(mContext,JSON_CART,savaJson);
+
+    }
+
+    /**
+     * 把sparseArray转成List
+     * @return
+     */
+    private List<GoodsBean> sparseArrayToList() {
+        //列表数据
+        List<GoodsBean> goodsBeanList = new ArrayList<>();
+
+        for (int i = 0; i < sparseArray.size(); i++) {
+            GoodsBean goodsBean = sparseArray.valueAt(i);
+            goodsBeanList.add(goodsBean);
+        }
+
+        return goodsBeanList;
     }
 }
