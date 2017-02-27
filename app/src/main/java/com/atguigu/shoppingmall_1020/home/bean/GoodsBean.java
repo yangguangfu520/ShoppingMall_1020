@@ -73,6 +73,7 @@ public class GoodsBean implements Serializable {
                 ", figure='" + figure + '\'' +
                 ", name='" + name + '\'' +
                 ", product_id='" + product_id + '\'' +
+                ", number=" + number +
                 '}';
     }
 }
