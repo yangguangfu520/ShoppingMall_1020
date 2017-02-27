@@ -195,7 +195,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
 
         }
 
-        public void setData(List<HomeBean.ResultEntity.HotInfoEntity> hot_info) {
+        public void setData(final List<HomeBean.ResultEntity.HotInfoEntity> hot_info) {
             //1.设置适配器
             adapter = new HotGridViewAdapter(mContext, hot_info);
             gvHot.setAdapter(adapter);
@@ -204,7 +204,18 @@ public class HomeAdapter extends RecyclerView.Adapter {
             gvHot.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Toast.makeText(mContext, "position==" + position, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(mContext, "position==" + position, Toast.LENGTH_SHORT).show();
+
+                    HomeBean.ResultEntity.HotInfoEntity infoBean = hot_info.get(position);
+                    //商品新的的Bean对象
+                    GoodsBean goodsBean = new GoodsBean();
+                    goodsBean.setProduct_id(infoBean.getProduct_id());
+                    goodsBean.setCover_price(infoBean.getCover_price());
+                    goodsBean.setFigure(infoBean.getFigure());
+                    goodsBean.setName(infoBean.getName());
+                    Intent intent = new Intent(mContext, GoodsInfoActivity.class);
+                    intent.putExtra(GOODS_BEAN,goodsBean);
+                    mContext.startActivity(intent);
                 }
             });
         }
@@ -266,7 +277,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
 
         }
 
-        public void setData(HomeBean.ResultEntity.SeckillInfoEntity seckill_info) {
+        public void setData(final HomeBean.ResultEntity.SeckillInfoEntity seckill_info) {
             //1.设置RecyclerView的适配
             adapter = new SeckillRecyclerViewAdapter(mContext, seckill_info);
             rvSeckill.setAdapter(adapter);
@@ -278,7 +289,18 @@ public class HomeAdapter extends RecyclerView.Adapter {
             adapter.setOnItemClickListener(new SeckillRecyclerViewAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View v, int position) {
-                    Toast.makeText(mContext, "postion==" + position, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(mContext, "postion==" + position, Toast.LENGTH_SHORT).show();
+
+                    HomeBean.ResultEntity.SeckillInfoEntity.ListEntity infoBean = seckill_info.getList().get(position);
+                    //商品新的的Bean对象
+                    GoodsBean goodsBean = new GoodsBean();
+                    goodsBean.setProduct_id(infoBean.getProduct_id());
+                    goodsBean.setCover_price(infoBean.getCover_price());
+                    goodsBean.setFigure(infoBean.getFigure());
+                    goodsBean.setName(infoBean.getName());
+                    Intent intent = new Intent(mContext, GoodsInfoActivity.class);
+                    intent.putExtra(GOODS_BEAN,goodsBean);
+                    mContext.startActivity(intent);
                 }
             });
 
