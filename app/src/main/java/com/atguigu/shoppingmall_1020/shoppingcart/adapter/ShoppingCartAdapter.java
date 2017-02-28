@@ -106,9 +106,39 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         return datas.size();
     }
 
+    /**
+     * 校验是否全选
+     */
+    public void checkAll() {
+        if(datas != null && datas.size() >0){
+
+            int number = 0;
+            for (int i=0;i<datas.size();i++){
+                GoodsBean goodsBean = datas.get(i);
+                if(!goodsBean.isChecked()){
+                    //只要有一个不勾选
+                    checkboxAll.setChecked(false);
+                    checkboxDeleteAll.setChecked(false);
+                }else{
+                    //勾选
+                    number ++;
+                }
+            }
+
+            if(datas.size()==number){
+                checkboxAll.setChecked(true);
+                checkboxDeleteAll.setChecked(true);
+            }
+
+        }else{
+            //没有数据
+            checkboxAll.setChecked(false);
+            checkboxDeleteAll.setChecked(false);
+        }
+    }
 
 
-     class MyViewHoler  extends RecyclerView.ViewHolder{
+    class MyViewHoler  extends RecyclerView.ViewHolder{
         @InjectView(R.id.cb_gov)
         CheckBox cbGov;
         @InjectView(R.id.iv_gov)
@@ -123,6 +153,37 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
          MyViewHoler(View view) {
             super(view);
             ButterKnife.inject(this, view);
+             view.setOnClickListener(new View.OnClickListener() {
+                 @Override
+                 public void onClick(View v) {
+
+                     if(itemClickListener != null){
+                         itemClickListener.onItemClickListener(v,getLayoutPosition());
+                     }
+                 }
+             });
         }
     }
+
+
+
+
+    //回调点击事件的监听
+    private OnItemClickListener itemClickListener;
+
+    /**
+     * 点击item的监听
+     */
+    public interface OnItemClickListener {
+       public void onItemClickListener(View view, int position);
+    }
+
+    /**
+     * 设置item的监听
+     * @param l
+     */
+    public void setOnItemClickListener(OnItemClickListener l) {
+        this.itemClickListener = l;
+    }
+
 }
