@@ -15,6 +15,7 @@ import com.atguigu.shoppingmall_1020.shoppingcart.view.AddSubView;
 import com.atguigu.shoppingmall_1020.utils.Constants;
 import com.bumptech.glide.Glide;
 
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -81,7 +82,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
     @Override
     public void onBindViewHolder(MyViewHoler holder, int position) {
         //1.先得到数据
-        GoodsBean goodsBean = datas.get(position);
+        final GoodsBean goodsBean = datas.get(position);
         //2.绑定数据
         holder.cbGov.setChecked(goodsBean.isChecked());
         //图片
@@ -97,6 +98,19 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         holder.addSubView.setMinValue(1);
         //设置库存-来自服务器-
         holder.addSubView.setMaxValue(100);
+
+        holder.addSubView.setOnNumberChangerListener(new AddSubView.OnNumberChangerListener() {
+            @Override
+            public void onNumberChanger(int value) {
+                //1.回调数量
+                goodsBean.setNumber(value);
+
+                CartStorage.getInstance(mContext).updateData(goodsBean);
+
+                showTotalPrice();
+
+            }
+        });
 
 
 
@@ -142,20 +156,41 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
      * 删除数据
      */
     public void deleteData() {
+//        if(datas != null && datas.size() >0){
+//            for (int i=0;i<datas.size();i++){
+//                GoodsBean goodsBean = datas.get(i);
+//                //当勾选的才删除
+//                if(goodsBean.isChecked()){
+//                    //1.内存中删除
+//                    datas.remove(goodsBean);
+//                    //2.本地也好保持
+//                    CartStorage.getInstance(mContext).deleteData(goodsBean);
+//                    //刷新数据
+//                    notifyItemRemoved(i);
+//                    i--;
+//                }
+//            }
+//        }
+
+
         if(datas != null && datas.size() >0){
-            for (int i=0;i<datas.size();i++){
-                GoodsBean goodsBean = datas.get(i);
+            for (Iterator iterator = datas.iterator();iterator.hasNext();){
+                GoodsBean goodsBean = (GoodsBean) iterator.next();
                 if(goodsBean.isChecked()){
-                    //1.内存中删除
-                    datas.remove(goodsBean);
-                    //2.本地也好保持
+
+                    int position  = datas.indexOf(goodsBean);
+                    //从内存中移除
+                    iterator.remove();
+                    //本地也要同步
                     CartStorage.getInstance(mContext).deleteData(goodsBean);
-                    //刷新数据
-                    notifyItemRemoved(i);
-                    i--;
+
+                    //刷新页面
+                    notifyItemRemoved(position);
+
                 }
             }
         }
+
     }
 
 

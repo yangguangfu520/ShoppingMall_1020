@@ -137,8 +137,6 @@ public class ShoppingCartFragment extends BaseFragment {
     @Override
     public void initData() {
         super.initData();
-
-
         showData();
     }
 
