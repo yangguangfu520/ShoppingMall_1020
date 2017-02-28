@@ -23,7 +23,7 @@ public class CartStorage {
     public static final String JSON_CART = "json_cart";
     private static CartStorage instace;
     private final Context mContext;
-    //SparseArray替代HashMap
+    //SparseArray替代HashMap-在内存中
     private SparseArray<GoodsBean> sparseArray;
 
     private CartStorage(Context context) {
@@ -38,6 +38,7 @@ public class CartStorage {
      */
     private void listToSparseArray() {
 
+        //从本地读取的集合数据
         List<GoodsBean> beanList = getAllData();
         //循环起来，把数据转存到sparseArray
         for (int i = 0; i < beanList.size(); i++) {
@@ -113,11 +114,11 @@ public class CartStorage {
             tempGoodsBean = goodsBean;
         }
 
-        //添加到集合中
+        //添加到集合中-内存
         sparseArray.put(Integer.parseInt(tempGoodsBean.getProduct_id()), tempGoodsBean);
 
 
-        //2.保持到本地
+        //2.保持到本地-持久化
         saveLocal();
     }
 
