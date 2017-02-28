@@ -1,5 +1,6 @@
 package com.atguigu.shoppingmall_1020.shoppingcart.fragment;
 
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -12,7 +13,11 @@ import android.widget.Toast;
 
 import com.atguigu.shoppingmall_1020.R;
 import com.atguigu.shoppingmall_1020.base.BaseFragment;
+import com.atguigu.shoppingmall_1020.home.bean.GoodsBean;
+import com.atguigu.shoppingmall_1020.shoppingcart.adapter.ShoppingCartAdapter;
 import com.atguigu.shoppingmall_1020.shoppingcart.utils.CartStorage;
+
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -52,6 +57,8 @@ public class ShoppingCartFragment extends BaseFragment {
     @InjectView(R.id.ll_empty_shopcart)
     LinearLayout llEmptyShopcart;
 
+    private ShoppingCartAdapter adapter;
+
     @Override
     public View initView() {
         View view = View.inflate(mContext, R.layout.fragment_shopping_cart, null);
@@ -67,8 +74,26 @@ public class ShoppingCartFragment extends BaseFragment {
     public void initData() {
         super.initData();
 
-
         Log.e("TAG", "购物车的数据被初始化了...");
+        List<GoodsBean> list =  CartStorage.getInstance(mContext).getAllData();
+        if(list != null && list.size() >0){
+            //购物车有数据
+            llEmptyShopcart.setVisibility(View.GONE);
+
+            adapter = new ShoppingCartAdapter(mContext,list);
+            //设置RecyclerView的适配器
+            recyclerview.setAdapter(adapter);
+
+            //布局管理器
+            recyclerview.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.VERTICAL,false));
+
+            //设置点击事件
+
+
+        }else{
+            //购物车没有数据
+            llEmptyShopcart.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
