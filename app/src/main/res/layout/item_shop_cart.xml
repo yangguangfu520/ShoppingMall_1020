@@ -12,13 +12,13 @@
         android:padding="10dp">
 
         <CheckBox
+            android:clickable="false"
             android:id="@+id/cb_gov"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:button="@drawable/checkbox_selector"
-            android:checked="true"
-            android:clickable="false" />
+            />
 
         <ImageView
             android:id="@+id/iv_gov"

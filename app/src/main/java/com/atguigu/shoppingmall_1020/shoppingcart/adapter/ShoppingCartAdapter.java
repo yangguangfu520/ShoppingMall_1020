@@ -29,10 +29,41 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
 
     private final Context mContext;
     private final List<GoodsBean> datas;
+    private final TextView tvShopcartTotal;
+    private final CheckBox checkboxAll;
+    private final CheckBox checkboxDeleteAll;
 
-    public ShoppingCartAdapter(Context mContext, List<GoodsBean> list) {
+    public ShoppingCartAdapter(Context mContext, List<GoodsBean> list, TextView tvShopcartTotal, CheckBox checkboxAll, CheckBox checkboxDeleteAll) {
         this.mContext = mContext;
         this.datas = list;
+        this.tvShopcartTotal = tvShopcartTotal;
+        this.checkboxAll = checkboxAll;
+        this.checkboxDeleteAll = checkboxDeleteAll;
+        showTotalPrice();
+
+
+    }
+
+    public void showTotalPrice() {
+        //显示总价格
+        tvShopcartTotal.setText("合计:"+getTotalPrice());
+    }
+
+    /**
+     * 返回总价格
+     * @return
+     */
+    public double getTotalPrice() {
+        double totalPrice = 0;
+        if(datas != null && datas.size() >0){
+            for (int i=0;i<datas.size();i++){
+                GoodsBean goodsBean = datas.get(i);
+                if(goodsBean.isChecked()){
+                    totalPrice += Double.parseDouble(goodsBean.getCover_price()) * goodsBean.getNumber();
+                }
+            }
+        }
+        return totalPrice;
     }
 
     /**
@@ -51,7 +82,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         //1.先得到数据
         GoodsBean goodsBean = datas.get(position);
         //2.绑定数据
-//        holder.cbGov.setChecked(goodsBean.isChecked());
+        holder.cbGov.setChecked(goodsBean.isChecked());
         //图片
         Glide.with(mContext).load(Constants.BASE_URL_IMAGE+goodsBean.getFigure()).into(holder.ivGov);
         //设置名称
