@@ -137,6 +137,22 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         }
     }
 
+    public void checkAll_none(boolean isChecked) {
+        if(datas != null && datas.size() >0){
+            for (int i=0;i<datas.size();i++){
+                GoodsBean goodsBean = datas.get(i);
+                //设置是否勾选状态
+                goodsBean.setChecked(isChecked);
+                checkboxAll.setChecked(isChecked);
+                checkboxDeleteAll.setChecked(isChecked);
+
+                //更新视图
+                notifyItemChanged(i);
+            }
+
+        }
+    }
+
 
     class MyViewHoler  extends RecyclerView.ViewHolder{
         @InjectView(R.id.cb_gov)
