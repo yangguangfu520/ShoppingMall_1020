@@ -36,6 +36,7 @@
         </activity>
 
         <!-- alipay sdk end -->
+        <activity android:name=".app.CallCenterActivity"/>
     </application>
 
 </manifest>
