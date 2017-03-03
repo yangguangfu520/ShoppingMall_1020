@@ -2,6 +2,7 @@ package com.atguigu.shoppingmall_1020.type.adapter;
 
 import android.app.ActionBar;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -15,6 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.atguigu.shoppingmall_1020.R;
+import com.atguigu.shoppingmall_1020.app.GoodsInfoActivity;
+import com.atguigu.shoppingmall_1020.home.adapter.HomeAdapter;
+import com.atguigu.shoppingmall_1020.home.bean.GoodsBean;
 import com.atguigu.shoppingmall_1020.type.bean.TypeBean;
 import com.atguigu.shoppingmall_1020.utils.Constants;
 import com.atguigu.shoppingmall_1020.utils.DensityUtil;
@@ -118,7 +122,7 @@ public class TypeRightAdapter extends RecyclerView.Adapter {
         public void setData(final TypeBean.ResultEntity.ChildEntity childEntity) {
             //1.请求图片
             //请求图片
-            Glide.with(mContext).load(Constants.BASE_URL_IMAGE + childEntity.getPic()).into(ivOrdinaryRight);
+            Glide.with(mContext).load(Constants.BASE_URL_IMAGE + childEntity.getPic()) .placeholder(R.drawable.new_img_loading_2).into(ivOrdinaryRight);
 
             //2.设置文本
             tvOrdinaryRight.setText(childEntity.getName());
@@ -212,7 +216,28 @@ public class TypeRightAdapter extends RecyclerView.Adapter {
                     public void onClick(View v) {
                         int position = (int) v.getTag();
 
-                        Toast.makeText(mContext, "position==" + hot_product_list.get(position).getCover_price(), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(mContext, "position==" + hot_product_list.get(position).getCover_price(), Toast.LENGTH_SHORT).show();
+
+
+//                        int position = (int) v.getTag();
+//                        Toast.makeText(mContext, "position==" + position, Toast.LENGTH_SHORT).show();
+
+                        String cover_price = hot_product_list.get(position).getCover_price();
+                        String name = hot_product_list.get(position).getName();
+                        String figure = hot_product_list.get(position).getFigure();
+                        String product_id = hot_product_list.get(position).getProduct_id();
+
+                        //创建商品Bean对象
+                        GoodsBean goodsBean = new GoodsBean();
+                        goodsBean.setProduct_id(product_id);
+                        goodsBean.setFigure(figure);
+                        goodsBean.setCover_price(cover_price);
+                        goodsBean.setName(name);
+
+                        Intent intent = new Intent(mContext, GoodsInfoActivity.class);
+                        intent.putExtra(HomeAdapter.GOODS_BEAN, goodsBean);
+                        mContext.startActivity(intent);
+
 
                     }
                 });
