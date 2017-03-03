@@ -1,20 +1,23 @@
 package com.atguigu.shoppingmall_1020.type.fragment;
 
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.atguigu.shoppingmall_1020.R;
 import com.atguigu.shoppingmall_1020.base.BaseFragment;
 import com.atguigu.shoppingmall_1020.type.adapter.TypeLeftAdapter;
+import com.atguigu.shoppingmall_1020.type.adapter.TypeRightAdapter;
 import com.atguigu.shoppingmall_1020.type.bean.TypeBean;
 import com.atguigu.shoppingmall_1020.utils.Constants;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
+
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -41,6 +44,10 @@ public class ListFragment extends BaseFragment {
             Constants.DIGIT_URL, Constants.GAME_URL};
 
     private TypeLeftAdapter leftAdapter;
+    /**
+     * RecyclerView的适配器
+     */
+    private TypeRightAdapter rightAdapter;
 
     @Override
     public View initView() {
@@ -102,8 +109,32 @@ public class ListFragment extends BaseFragment {
      */
     private void processData(String response) {
         TypeBean typeBean = JSON.parseObject(response,TypeBean.class);
-        ;
-        Toast.makeText(mContext, ""+typeBean.getResult().get(0).getName(), Toast.LENGTH_SHORT).show();
+        List<TypeBean.ResultEntity> result = typeBean.getResult();
+//        Toast.makeText(mContext, ""+typeBean.getResult().get(0).getName(), Toast.LENGTH_SHORT).show();
+        if(result != null && result.size() >0 ){
+
+
+
+            //设置RecyclerView的适配器
+            rightAdapter = new TypeRightAdapter(mContext,result);
+            rvRight.setAdapter(rightAdapter);
+
+
+            //设置布局管理器
+            GridLayoutManager manager = new GridLayoutManager(mContext,3);
+            manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    if(position ==0){
+                        return 3;
+                    }else{
+                        return 1;
+                    }
+                }
+            });
+            rvRight.setLayoutManager(manager);
+
+        }
 
     }
 
