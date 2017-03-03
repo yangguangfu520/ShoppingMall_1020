@@ -34,6 +34,7 @@ import butterknife.InjectView;
 public class TypeRightAdapter extends RecyclerView.Adapter {
     private final Context mContext;
 
+
     private List<TypeBean.ResultEntity.ChildEntity> child;
     private List<TypeBean.ResultEntity.HotProductListEntity> hot_product_list;
 
@@ -74,13 +75,15 @@ public class TypeRightAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return 1;
+        return 1 + child.size();
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == HOT) {
             return new HotViewHolder(inflater.inflate(R.layout.item_hot_right, null));
+        } else if (viewType == COMMON) {
+            return new CommonViewHolder(inflater.inflate(R.layout.item_common_right, null));
         }
         return null;
     }
@@ -91,8 +94,45 @@ public class TypeRightAdapter extends RecyclerView.Adapter {
         if (getItemViewType(position) == HOT) {
             HotViewHolder viewHolder = (HotViewHolder) holder;
             viewHolder.setData(hot_product_list);
+        }else if(getItemViewType(position) == COMMON){
+            CommonViewHolder viewHolder = (CommonViewHolder) holder;
+            int realPostion = position -1;
+            viewHolder.setData(child.get(realPostion));
         }
 
+    }
+
+    class CommonViewHolder extends RecyclerView.ViewHolder {
+        @InjectView(R.id.iv_ordinary_right)
+        ImageView ivOrdinaryRight;
+        @InjectView(R.id.tv_ordinary_right)
+        TextView tvOrdinaryRight;
+        @InjectView(R.id.ll_root)
+        LinearLayout llRoot;
+        public CommonViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.inject(this,itemView);
+        }
+
+
+        public void setData(final TypeBean.ResultEntity.ChildEntity childEntity) {
+            //1.请求图片
+            //请求图片
+            Glide.with(mContext).load(Constants.BASE_URL_IMAGE + childEntity.getPic()).into(ivOrdinaryRight);
+
+            //2.设置文本
+            tvOrdinaryRight.setText(childEntity.getName());
+
+
+            llRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Toast.makeText(mContext, ""+childEntity.getName(), Toast.LENGTH_SHORT).show();
+
+                }
+            });
+        }
     }
 
     class HotViewHolder extends RecyclerView.ViewHolder {
@@ -113,17 +153,15 @@ public class TypeRightAdapter extends RecyclerView.Adapter {
          */
         public void setData(final List<TypeBean.ResultEntity.HotProductListEntity> hot_product_list) {
 
-            for (int i = 0; i< hot_product_list.size(); i++) {
+            for (int i = 0; i < hot_product_list.size(); i++) {
 
-                TypeBean.ResultEntity.HotProductListEntity bean =  hot_product_list.get(i);
-
+                TypeBean.ResultEntity.HotProductListEntity bean = hot_product_list.get(i);
 
 
                 //外面的线性布局
                 LinearLayout layout = new LinearLayout(mContext);
-                final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT,-2);
+                final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT, -2);
                 params.setMargins((DensityUtil.dip2px(mContext, 5)), 0, DensityUtil.dip2px(mContext, 5), DensityUtil.dip2px(mContext, 20));
-
 
 
                 layout.setGravity(Gravity.CENTER);//设置布局居中
@@ -142,7 +180,7 @@ public class TypeRightAdapter extends RecyclerView.Adapter {
 
 
                 //把图片添加到线性布局
-                layout.addView(imageView,ivParams);
+                layout.addView(imageView, ivParams);
 
 
                 //--创建文本---------
@@ -157,15 +195,12 @@ public class TypeRightAdapter extends RecyclerView.Adapter {
                 textView.setText("￥" + bean.getCover_price());
 
                 //把文本添加到线性布局
-                layout.addView(textView,tvParams);
-
-
+                layout.addView(textView, tvParams);
 
 
                 //把每个线性布局添加到外部的线性布局中
 
-                llHotRight.addView(layout,params);
-
+                llHotRight.addView(layout, params);
 
 
                 //设置item的点击事件
@@ -177,15 +212,10 @@ public class TypeRightAdapter extends RecyclerView.Adapter {
                     public void onClick(View v) {
                         int position = (int) v.getTag();
 
-                        Toast.makeText(mContext, "position=="+hot_product_list.get(position).getCover_price(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "position==" + hot_product_list.get(position).getCover_price(), Toast.LENGTH_SHORT).show();
 
                     }
                 });
-
-
-
-
-
 
 
             }
