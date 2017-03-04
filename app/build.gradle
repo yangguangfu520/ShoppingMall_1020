@@ -41,4 +41,6 @@ dependencies {
     compile files('libs/alipaySdk-20160809.jar')
     compile 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
     compile 'com.android.support:percent:24.2.1'
+    compile 'com.android.support:design:24.2.1'
+
 }

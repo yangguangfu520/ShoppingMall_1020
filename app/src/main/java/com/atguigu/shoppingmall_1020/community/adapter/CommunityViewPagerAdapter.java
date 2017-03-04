@@ -16,6 +16,7 @@ import java.util.ArrayList;
  */
 public class CommunityViewPagerAdapter extends FragmentPagerAdapter {
     private final ArrayList<BaseFragment> fragments;
+    private String[] titles = new String[]{"新帖", "热帖"};
 
     public CommunityViewPagerAdapter(FragmentManager fm, ArrayList<BaseFragment> fragments) {
         super(fm);
@@ -30,5 +31,10 @@ public class CommunityViewPagerAdapter extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         return fragments.size();
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        return titles[position];
     }
 }

@@ -1,5 +1,6 @@
 package com.atguigu.shoppingmall_1020.community.fragment;
 
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +29,8 @@ public class CommunityFragment extends BaseFragment {
     ImageButton ibCommunityMessage;
     @InjectView(R.id.view_pager)
     ViewPager viewPager;
+    @InjectView(R.id.tablayout)
+    TabLayout tablayout;
     private ArrayList<BaseFragment> fragments;
     private CommunityViewPagerAdapter adapter;
 
@@ -49,8 +52,12 @@ public class CommunityFragment extends BaseFragment {
         initFragment();
 
         //设置适配器
-        adapter = new CommunityViewPagerAdapter(getFragmentManager(),fragments);
+        adapter = new CommunityViewPagerAdapter(getFragmentManager(), fragments);
         viewPager.setAdapter(adapter);
+
+        //关联ViewPager
+        tablayout.setupWithViewPager(viewPager);
+        tablayout.setTabMode(TabLayout.MODE_SCROLLABLE);
     }
 
     private void initFragment() {
@@ -75,4 +82,6 @@ public class CommunityFragment extends BaseFragment {
                 break;
         }
     }
+
+
 }
