@@ -1,5 +1,6 @@
 package com.atguigu.shoppingmall_1020.user.fragment;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
@@ -10,11 +11,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.atguigu.shoppingmall_1020.R;
+import com.atguigu.shoppingmall_1020.app.LoginActivity;
 import com.atguigu.shoppingmall_1020.base.BaseFragment;
 import com.hankkin.gradationscroll.GradationScrollView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 
 /**
  * 作者：尚硅谷-杨光福 on 2017/2/22 11:36
@@ -105,7 +108,7 @@ public class UserFragment extends BaseFragment implements GradationScrollView.Sc
         });
 
         //设置默认是隐藏的 //设置标题的背景颜色  -透明
-        tvUsercenter.setBackgroundColor(Color.argb((int) 0, 255,0,0));
+        tvUsercenter.setBackgroundColor(Color.argb((int) 0, 255, 0, 0));
     }
 
 
@@ -119,7 +122,7 @@ public class UserFragment extends BaseFragment implements GradationScrollView.Sc
     public void onScrollChanged(GradationScrollView scrollView, int x, int y, int oldx, int oldy) {
         if (y <= 0) {
             //设置标题的背景颜色  -透明
-            tvUsercenter.setBackgroundColor(Color.argb((int) 0, 255,0,0));
+            tvUsercenter.setBackgroundColor(Color.argb((int) 0, 255, 0, 0));
 
         } else if (y > 0 && y <= height) { //滑动距离小于banner图的高度时，设置背景和字体颜色颜色透明度渐变
             float scale = (float) y / height;
@@ -127,11 +130,20 @@ public class UserFragment extends BaseFragment implements GradationScrollView.Sc
             //滑动距离 ： 总距离 = 改变的透明度 ： 总透明度
             //改变的透明度 = 总透明度*(滑动距离 ：总距离)
 
-            tvUsercenter.setTextColor(Color.argb((int) alpha, 255,255,255));
-            tvUsercenter.setBackgroundColor(Color.argb((int) alpha, 255,0,0));
+            tvUsercenter.setTextColor(Color.argb((int) alpha, 255, 255, 255));
+            tvUsercenter.setBackgroundColor(Color.argb((int) alpha, 255, 0, 0));
         } else {
             //滑动到banner下面设置普通颜色 - 非透明
-            tvUsercenter.setBackgroundColor(Color.argb((int) 255, 255,0,0));
+            tvUsercenter.setBackgroundColor(Color.argb((int) 255, 255, 0, 0));
         }
+    }
+
+
+
+    @OnClick(R.id.tv_username)
+    public void onClick() {
+
+        Intent intent = new Intent(mContext,LoginActivity.class);
+        startActivity(intent);
     }
 }

@@ -25,18 +25,18 @@
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity android:name=".app.GoodsInfoActivity" />
-        <activity android:name=".app.WebViewActivity"></activity>
+        <activity android:name=".app.WebViewActivity" />
         <!-- alipay sdk begin -->
         <activity
             android:name="com.alipay.sdk.app.H5PayActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:exported="false"
             android:screenOrientation="behind"
-            android:windowSoftInputMode="adjustResize|stateHidden" >
-        </activity>
+            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
 
         <!-- alipay sdk end -->
-        <activity android:name=".app.CallCenterActivity"/>
+        <activity android:name=".app.CallCenterActivity" />
+        <activity android:name=".app.LoginActivity"></activity>
     </application>
 
 </manifest>
