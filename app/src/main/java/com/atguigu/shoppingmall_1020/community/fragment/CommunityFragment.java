@@ -1,12 +1,19 @@
 package com.atguigu.shoppingmall_1020.community.fragment;
 
-import android.graphics.Color;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.ImageButton;
 
+import com.atguigu.shoppingmall_1020.R;
 import com.atguigu.shoppingmall_1020.base.BaseFragment;
+import com.atguigu.shoppingmall_1020.community.adapter.CommunityViewPagerAdapter;
+
+import java.util.ArrayList;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
 
 /**
  * 作者：尚硅谷-杨光福 on 2017/2/22 11:36
@@ -15,14 +22,20 @@ import com.atguigu.shoppingmall_1020.base.BaseFragment;
  * 作用：发现Fragment
  */
 public class CommunityFragment extends BaseFragment {
-    private TextView textView;
+    @InjectView(R.id.ib_community_icon)
+    ImageButton ibCommunityIcon;
+    @InjectView(R.id.ib_community_message)
+    ImageButton ibCommunityMessage;
+    @InjectView(R.id.view_pager)
+    ViewPager viewPager;
+    private ArrayList<BaseFragment> fragments;
+    private CommunityViewPagerAdapter adapter;
+
     @Override
     public View initView() {
-        textView = new TextView(mContext);
-        textView.setTextSize(20);
-        textView.setGravity(Gravity.CENTER);
-        textView.setTextColor(Color.RED);
-        return textView;
+        View view = View.inflate(mContext, R.layout.fragment_community, null);
+        ButterKnife.inject(this, view);
+        return view;
     }
 
     /**
@@ -32,7 +45,34 @@ public class CommunityFragment extends BaseFragment {
     @Override
     public void initData() {
         super.initData();
-        Log.e("TAG","发现的数据被初始化了...");
-        textView.setText("发现内容");
+        Log.e("TAG", "发现的数据被初始化了...");
+        initFragment();
+
+        //设置适配器
+        adapter = new CommunityViewPagerAdapter(getFragmentManager(),fragments);
+        viewPager.setAdapter(adapter);
+    }
+
+    private void initFragment() {
+        fragments = new ArrayList<>();
+        fragments.add(new NewPostFragment());
+        fragments.add(new HotPostFragment());
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.reset(this);
+    }
+
+    @OnClick({R.id.ib_community_icon, R.id.ib_community_message})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.ib_community_icon:
+                break;
+            case R.id.ib_community_message:
+                break;
+        }
     }
 }
