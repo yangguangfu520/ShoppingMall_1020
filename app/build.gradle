@@ -43,5 +43,5 @@ dependencies {
     compile 'com.android.support:percent:24.2.1'
     compile 'com.android.support:design:24.2.1'
     compile 'com.linsea:opendanmaku:1.0.0@aar'
-
+    compile project(':gradationscroll')
 }
