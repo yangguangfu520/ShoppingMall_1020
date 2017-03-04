@@ -33,6 +33,11 @@ public class CommunityViewPagerAdapter extends FragmentPagerAdapter {
         return fragments.size();
     }
 
+    /**
+     * 显示TabLayout的标题才用到的
+     * @param position
+     * @return
+     */
     @Override
     public CharSequence getPageTitle(int position) {
         return titles[position];
