@@ -1,11 +1,20 @@
 package com.atguigu.shoppingmall_1020.community.fragment;
 
-import android.graphics.Color;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.ListView;
 
+import com.alibaba.fastjson.JSON;
+import com.atguigu.shoppingmall_1020.R;
 import com.atguigu.shoppingmall_1020.base.BaseFragment;
+import com.atguigu.shoppingmall_1020.community.bean.NewPostBean;
+import com.atguigu.shoppingmall_1020.utils.Constants;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import okhttp3.Call;
 
 /**
  * 作者：尚硅谷-杨光福 on 2017/3/4 09:22
@@ -14,14 +23,14 @@ import com.atguigu.shoppingmall_1020.base.BaseFragment;
  * 作用：新帖Fragment
  */
 public class NewPostFragment extends BaseFragment {
-    private TextView textView;
+    @InjectView(R.id.lv_new_post)
+    ListView lvNewPost;
+
     @Override
     public View initView() {
-        textView = new TextView(mContext);
-        textView.setTextSize(20);
-        textView.setGravity(Gravity.CENTER);
-        textView.setTextColor(Color.RED);
-        return textView;
+        View rootView = View.inflate(mContext, R.layout.fragment_news_post, null);
+        ButterKnife.inject(this, rootView);
+        return rootView;
     }
 
     /**
@@ -31,6 +40,41 @@ public class NewPostFragment extends BaseFragment {
     @Override
     public void initData() {
         super.initData();
-        textView.setText("新帖Fragment");
+        getDataFromNet();
+    }
+
+
+    public void getDataFromNet() {
+        OkHttpUtils
+                .get()
+                //联网地址
+                .url(Constants.NEW_POST_URL)
+                .id(100)//http,
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        Log.e("TAG","联网失败=="+e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        Log.e("TAG","新帖联网成功==");
+                        processData(response);
+
+                    }
+                });
+    }
+
+    private void processData(String json) {
+
+        NewPostBean bean = JSON.parseObject(json,NewPostBean.class);
+//        Toast.makeText(mContext, ""+bean.getResult().get(0).getSaying(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.reset(this);
     }
 }
