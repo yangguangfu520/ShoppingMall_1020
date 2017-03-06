@@ -32,11 +32,12 @@
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:exported="false"
             android:screenOrientation="behind"
-            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <!-- alipay sdk end -->
         <activity android:name=".app.CallCenterActivity" />
-        <activity android:name=".app.LoginActivity"></activity>
+        <activity android:name=".app.LoginActivity" />
+        <activity android:name=".home.activity.GoodsListActivity"></activity>
     </application>
 
 </manifest>

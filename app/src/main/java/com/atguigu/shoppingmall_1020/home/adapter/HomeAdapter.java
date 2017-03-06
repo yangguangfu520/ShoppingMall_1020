@@ -12,11 +12,11 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.atguigu.shoppingmall_1020.R;
 import com.atguigu.shoppingmall_1020.app.GoodsInfoActivity;
 import com.atguigu.shoppingmall_1020.app.WebViewActivity;
+import com.atguigu.shoppingmall_1020.home.activity.GoodsListActivity;
 import com.atguigu.shoppingmall_1020.home.bean.GoodsBean;
 import com.atguigu.shoppingmall_1020.home.bean.HomeBean;
 import com.atguigu.shoppingmall_1020.home.bean.WebViewBean;
@@ -380,7 +380,12 @@ public class HomeAdapter extends RecyclerView.Adapter {
             gvChannel.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Toast.makeText(mContext, "position==" + position, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(mContext, "position==" + position, Toast.LENGTH_SHORT).show();
+                    if(position < 9){
+                        Intent intent = new Intent(mContext, GoodsListActivity.class);
+                        intent.putExtra("position",position);
+                        mContext.startActivity(intent);
+                    }
                 }
             });
 
