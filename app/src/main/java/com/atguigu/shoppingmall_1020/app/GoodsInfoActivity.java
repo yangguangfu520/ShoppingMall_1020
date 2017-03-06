@@ -104,7 +104,7 @@ public class GoodsInfoActivity extends AppCompatActivity {
     private void setData() {
 
         //1.设置图片
-        Glide.with(this).load(Constants.BASE_URL_IMAGE+goodsBean.getFigure()).into(ivGoodInfoImage);
+        Glide.with(this).load(Constants.BASE_URL_IMAGE+goodsBean.getFigure()).placeholder(R.drawable.new_user_icon_background).into(ivGoodInfoImage);
 
         //2.设置名称和价格
         tvGoodInfoName.setText(goodsBean.getName());
